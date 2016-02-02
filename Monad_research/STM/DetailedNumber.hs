@@ -29,5 +29,5 @@ countDown n
     | otherwise = do
          tell[show $ getNumber n]
          countDown $ takeOne n
-         
-run = runWriter (countDown $ createNumber 3)
+
+main = return $ runWriter (countDown $ createNumber 3)
