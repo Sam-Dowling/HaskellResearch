@@ -1,6 +1,8 @@
 
 type Positive = Int
 
+
+
 c :: (Positive -> Positive) -> Positive -> Maybe Positive
 c f n 
     | n > 0 = Just (f n)
