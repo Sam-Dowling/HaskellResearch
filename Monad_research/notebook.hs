@@ -47,7 +47,7 @@ elemAt [] (Node x _ _) = x
 
 
 
-
+{-
 
 data Trivial a = Cow
 
@@ -55,12 +55,46 @@ instance Monad Trivial where
     _ >>= _ = Cow
     return _ = Cow
 
+-}
 
-
-lamda :: Int -> Int
-lamda n = product $ map (\x -> x * 2) [1..n]
+lamda :: Int -> [Int]
+lamda n = map (\x -> x * 2) [1..n]
 
 type Algebra f a = f a -> a 
 newtype Mu f = InF { outF :: f (Mu f) } 
 cata :: Functor f => Algebra f a -> Mu f -> a 
 cata f = f . fmap (cata f) . outF
+
+
+
+returnTwo :: Int -> (Int,Int)
+returnTwo n = (n,n+1)
+
+
+{-
+type myIO = IO 
+type myInt = Int
+data ioOrInt = myIO | myInt
+
+ioTest :: Int -> Int
+ioTest x = 
+-}
+
+
+check :: String -> Bool
+check s
+    | length s < 5 = True
+    | otherwise = False
+
+
+shout :: String -> String
+shout str = (++"!") str
+
+
+{-
+let chain = [shout | check]
+
+apply = foldl (.) id
+
+let result = chain `apply` "Hi"
+-}

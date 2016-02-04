@@ -1,15 +1,13 @@
 
-type Positive = Int
+type Positive = Int -- Positive > 0
 
-
-
-c :: (Positive -> Positive) -> Positive -> Maybe Positive
-c f n 
-    | n > 0 = Just (f n)
+check :: (Positive -> Positive) -> Positive -> Maybe Positive
+check f n 
+    | f n > 0 = Just (f n)
     | otherwise = Nothing
 
-subone :: Positive -> Positive
-subone n = n - 1
+subOne :: Positive -> Positive
+subOne = (subtract 1)
 
-addone :: Positive -> Positive
-addone n = n + 1
+safeSubOne :: Positive -> Maybe Positive
+safeSubOne = check subone
