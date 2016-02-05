@@ -30,3 +30,5 @@ instance Functor Tree where
     fmap f EmptyTree = EmptyTree
     fmap f (Tree x left right) = Tree (f x) (fmap f left) (fmap f right)
 
+
+
