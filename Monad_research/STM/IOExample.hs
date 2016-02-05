@@ -1,5 +1,4 @@
 import Data.Char (toUpper)
-import Control.Exception
 import System.IO
 import Control.Applicative
 import Data.IORef
