@@ -1,12 +1,20 @@
 import Data.Char (toUpper)
+import Control.Applicative
+
+shoutInputDo :: IO String
+shoutInputDo = do
+    str <- getUserInput
+    return $ shout str
 
 
-shoutInput :: IO String
-shoutInput = do
-    str <- getLine
-    return $ shout str 
+shoutInputApplicative :: IO String
+shoutInputApplicative = shout <$> getUserInput
 
 
---  "Hello" -> "HELLO!"
+getUserInput :: IO String
+getUserInput = putChar '>' >> getLine
+
+
+-- "Hello" -> "HELLO!"
 shout :: String -> String
 shout = (map toUpper) . (++ "!")
