@@ -90,11 +90,15 @@ check s
 shout :: String -> String
 shout str = (++"!") str
 
+everySecond :: (a -> a) -> [a] -> [a]
+everySecond f (a:b:c) = a:(f b):(everySecond f c)
+everySecond f c = c
 
-{-
-let chain = [shout | check]
+digs :: Integral x => x -> [x]
+digs 0 = []
+digs x = digs(x `div` 10) ++ [x `mod` 10] 
 
-apply = foldl (.) id
 
-let result = chain `apply` "Hi"
--}
+void :: a -> ()
+void _ = ()
+
