@@ -37,7 +37,9 @@ exampleIORef = do
     modifyIORef greeting shout
     readIORef greeting
 
-fmap' f x = pure f <*> x
+-- fmap f x = pure f <*> x
+--      (+) <$> Just 10 <*> Just 5 = Just 15
+-- Just (+) <*> Just 10 <*> Just 5 = Just 15
 
 readText :: IO Int 
 readText = sum . map (\x -> read x :: Int) . words <$> readFile "Nums.txt" 
