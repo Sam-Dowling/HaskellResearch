@@ -102,3 +102,7 @@ digs x = digs(x `div` 10) ++ [x `mod` 10]
 void :: a -> ()
 void _ = ()
 
+
+takeEither :: Either Int String -> Int
+takeEither = either (+2) length
+
