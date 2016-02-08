@@ -3,15 +3,25 @@ import System.IO
 import Control.Applicative
 import Data.IORef
 
+-- instance Applicative Maybe where
+--     pure                  = Just
+--     (Just f) <*> (Just x) = Just (f x)
+--     _        <*> _        = Nothing
+
+--      (+3)  $       9 =      12
+--      (+3) <$> Just 9 = Just 12
+-- fmap (+3)     Just 9 = Just 12
+-- Just (+3) <*> Just 9 = Just 12
+-- Pure (+3) <*> Just 9 = Just 12
+
+
 shoutInputDo :: IO String
 shoutInputDo = do
     str <- getUserInput
     return $ shout str
 
 
---      (+3)  $       9 =      12
---      (+3) <$> Just 9 = Just 12
--- Just (+3) <*> Just 9 = Just 12
+
 shoutInputApplicative :: IO String
 shoutInputApplicative = shout <$> getUserInput
 
@@ -27,9 +37,10 @@ exampleIORef = do
     modifyIORef greeting shout
     readIORef greeting
 
+fmap' f x = pure f <*> x
 
 readText :: IO Int 
-readText = sum . map (\x -> read x::Int) . words <$> readFile "Nums.txt" 
+readText = sum . map (\x -> read x :: Int) . words <$> readFile "Nums.txt" 
 
 
 -- "Hello" -> "HELLO!"
