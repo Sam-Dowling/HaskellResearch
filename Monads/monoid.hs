@@ -1,11 +1,16 @@
 import Data.Monoid
 
 
-newtype Add a = Add {getAdd :: a} deriving (Eq, Ord, Read, Show, Bounded)
+newtype Adder a = Adder {getAdder :: a} deriving (Eq, Ord, Read, Show, Bounded)
 
-instance Num a => Monoid (Add a) where
-    mempty = Add 0
-    Add x `mappend` Add y = Add (x + y)
+instance Num a => Monoid (Adder a) where
+    mempty = Adder 0
+    Adder x `mappend` Adder y = Adder (x + y)
 
 
-main = print . mconcat $ map Add [1..5]
+endoFunc :: Endo Int
+endoFunc = mconcat $ map Endo [(+1), (*(-2)), negate]
+
+
+
+main = print . mconcat $ map Adder [endoFunc `appEndo` x | x <- [1..5]]
