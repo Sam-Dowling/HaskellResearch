@@ -1,38 +1,33 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-
-import Control.Concurrent.STM
 import Control.Monad
+import Control.Concurrent
+import Control.Concurrent.STM
 
-data Item = Scroll
-          | Wand
-          | Banjo
-            deriving (Eq, Ord, Show)
+type Account = TVar Double
 
-newtype Gold = Gold Int
-               deriving (Eq, Ord, Show, Num)
+transfer :: Account -> Account -> Double -> STM ()
+transfer from to amount = do
+    availiable <- readTVar from
+    when (amount > availiable) retry
+    modifyTVar from (+ (-amount))
+    modifyTVar to   (+   amount)
 
-newtype HitPoint = HitPoint Int
-               deriving (Eq, Ord, Show, Num)
-
-type Inventory = TVar [Item]
-type Health = TVar HitPoint
-type Balance = TVar Gold
-
-data Player = Player {
-            balance :: Balance,
-            health :: Health,
-            inventory :: Inventory
-            }            
-
-basicTransfer qty fromBal toBal = do
-        fromQty <- readTVar fromBal
-        toQty   <- readTVar toBal
-        writeTVar fromBal (fromQty - qty)
-        writeTVar toBal   (toQty + qty)
+actions :: Account -> Account -> [IO ThreadId]
+actions a b = map forkIO [
+       atomically (transfer a b 10)
+     , atomically (transfer a b (-20))
+     , atomically (transfer a b 30)
+   ]
 
 
-transferTest = do
-        alice <- newTVar (12 :: Gold)
-        bob   <- newTVar 4
-        basicTransfer 3 alice bob
-        liftM2 (,) (readTVar alice) (readTVar bob)
+main = do
+  accountA <- atomically $ newTVar 60
+  accountB <- atomically $ newTVar 0
+
+  sequence_ (actions accountA accountB)
+
+  balanceA <- atomically $ readTVar accountA
+  balanceB <- atomically $ readTVar accountB
+  return balanceA
+
+  print $ "BalanceA " ++ (show balanceA)
+  print $ "BalanceB " ++ (show balanceB)
