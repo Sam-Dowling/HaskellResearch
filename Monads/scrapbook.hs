@@ -106,3 +106,7 @@ void _ = ()
 takeEither :: Either Int String -> Int
 takeEither = either (+2) length
 
+
+square x = x * x
+printSquare1 = fmap (fmap square) $ Just [1..5]
+printSquare2 = (fmap . fmap) square $ Just [1..5]
