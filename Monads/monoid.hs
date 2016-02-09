@@ -13,4 +13,5 @@ endoFunc = mconcat $ map Endo [(+1), (*(-2)), negate]
 
 
 
-main = print . mconcat $ map Adder [endoFunc `appEndo` x | x <- [1..5]]
+main = print . getAdder . mconcat $ map Adder [endoFunc `appEndo` x | x <- [1..5]]
+

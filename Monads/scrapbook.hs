@@ -110,3 +110,8 @@ takeEither = either (+2) length
 square x = x * x
 printSquare1 = fmap (fmap square) $ Just [1..5]
 printSquare2 = (fmap . fmap) square $ Just [1..5]
+
+
+
+validate_isbn :: [Int] -> Bool
+validate_isbn x = (== 0) . (`mod` 11) . sum $ zipWith (*) [l,l-1..] x where l = length x
