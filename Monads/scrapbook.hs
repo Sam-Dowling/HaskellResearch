@@ -114,4 +114,4 @@ printSquare2 = (fmap . fmap) square $ Just [1..5]
 
 
 validate_isbn :: [Int] -> Bool
-validate_isbn x = (== 0) . (`mod` 11) . sum $ zipWith (*) [l,l-1..] x where l = length x
+validate_isbn x = (== 0) . (`mod` 11) . sum . zipWith (*) [1..] $ reverse x
