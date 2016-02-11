@@ -26,13 +26,13 @@ type Writer a = (a, String)
 m1 >=> m2 = \x ->
     let (y, s1) = m1 x
         (z, s2) = m2 y
-    in (z, s1 ++ s2)
+    in (z, s1 ++ " >=> " ++ s2)
 
-return :: a -> Writer a
-return x = (x, "")
 
 writeLog :: Maybe Positive -> Writer (Maybe Positive)
-writeLog s = ((s >>= safeSubOne), (drop 5(show s)) ++ " - 1 = " ++ (drop 5(show(s >>= safeSubOne))) ++ ", ")
+writeLog s = ((s >>= safeSubOne), (drop 5(show s)) ++ " - 1 = " ++ (drop 5(show(s >>= safeSubOne))))
 
 process :: Maybe Positive -> Writer (Maybe Positive)
-process = (>=>) writeLog writeLog
+process = writeLog >=> writeLog >=> writeLog
+-- ex. process $ return 3
+
