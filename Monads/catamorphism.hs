@@ -12,7 +12,7 @@ type Str = Mu StrF
 instance Functor StrF where     
     fmap f (Cons a as) = Cons a (f as)     
     fmap f Nil = Nil
-    
+   
 clength :: Str -> Int 
 clength = cata phi where     
     phi (Cons a b) = 1 + b     
@@ -29,12 +29,12 @@ data TreeF x = Node Int [x]
 type Tree = Mu TreeF
 
 instance Functor TreeF where
-  fmap f (Node e xs) = Node e (fmap f xs)
+    fmap f (Node e xs) = Node e (fmap f xs)
 
 cdepth :: Tree -> Int
 cdepth = cata phi where
-  phi :: Algebra TreeF Int
-  phi (Node x sons) = 1 + foldr max 0 sons
+    phi :: Algebra TreeF Int
+    phi (Node x sons) = 1 + foldr max 0 sons
 
 samTree = InF { outF = Node 4 [ 
           InF { outF = Node 1 [
