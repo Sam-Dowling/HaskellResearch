@@ -1,17 +1,22 @@
 
+import Prelude hiding ((>>=))
+
+data DataM =  Success [MyData] | Failure [MyData] deriving Show
+
 data MyData = Merchant | Financial | Student | None deriving Show
 
+(>>=) :: DataM -> ([MyData] -> DataM) -> DataM
+val >>= f = case val of
+              Success (x) -> f x
+              Failure (x) -> Failure $ None : x
 
-functionA (Right x) = Right $ Merchant : x
-functionA (Left x) = Left $ None : x
+functionA :: [MyData] -> DataM
+functionA x = Success $ Merchant : x -- Pass!
 
-functionB (Right x) = Right $ Financial : x
-functionB (Left x) = Left $ None : x
+functionB :: [MyData] -> DataM
+functionB x = Success $ Financial : x -- Pass!
 
-logfunc = putStrLn . show
+functionC :: [MyData] -> DataM
+functionC x = Failure $ None : x -- This function fails!
 
-
-goodData = Right [Student]
-badData = Left [Student]
-
-run = logfunc . functionB . functionA $ goodData
+run = Success [] >>= functionA >>= functionB >>= functionC >>= functionA
