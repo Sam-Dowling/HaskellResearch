@@ -115,3 +115,9 @@ printSquare2 = (fmap . fmap) square $ Just [1..5]
 
 validate_isbn :: [Int] -> Bool
 validate_isbn x = (== 0) . (`mod` 11) . sum . zipWith (*) [1..] $ reverse x
+
+
+
+safeHead :: [a] -> Maybe a
+safeHead [] = Nothing
+safeHead (x:xs) = Just x

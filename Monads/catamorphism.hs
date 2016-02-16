@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 type Algebra f a = f a -> a 
 newtype Mu f = InF { outF :: f (Mu f) } 
 
@@ -6,22 +8,25 @@ cata f = f . fmap (cata f) . outF
 
 ---------------------------------------------------
 
-data StrF x = Cons Char x | Nil 
+data StrF x = Cons Char x | Nil
 type Str = Mu StrF
 
 instance Functor StrF where     
     fmap f (Cons a as) = Cons a (f as)     
     fmap f Nil = Nil
+
+instance Show Str where
+    show = cprint
    
-clength :: Str -> Int 
-clength = cata phi where     
-    phi (Cons a b) = 1 + b     
-    phi Nil = 0
+cprint :: Str -> String
+cprint = cata phi where     
+    phi (Cons a b) = a : b    
+    phi Nil = ""
     
-sam= InF { outF = Cons 'S'
-    (InF { outF = Cons 'a'
-    (InF { outF = Cons 'm'
-    (InF { outF = Nil })})})}
+sam = InF { outF = Cons 'S'
+     (InF { outF = Cons 'a'
+     (InF { outF = Cons 'm'
+     (InF { outF = Nil })})})}
     
 ------------------------------------------------------
 
