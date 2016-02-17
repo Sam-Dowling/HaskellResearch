@@ -12,6 +12,7 @@ endoFunc :: Endo Int
 endoFunc = mconcat $ map Endo [(+1), (*(-2)), negate]
 
 
-
 main = print . getAdder . mconcat $ map Adder [endoFunc `appEndo` x | x <- [1..5]]
+
+
 
