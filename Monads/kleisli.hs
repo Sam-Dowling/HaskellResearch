@@ -1,31 +1,29 @@
-data Optional a = Invalid | Valid a 
-  deriving (Show)
 
-safeRoot :: Double -> (Optional Double, Bool)
+safeRoot :: Double -> (Maybe Double, Bool)
 safeRoot x
-  | x >= 0    = (Valid (sqrt x), True)
-  | otherwise = (Invalid, False)
+  | x >= 0    = (Just (sqrt x), True)
+  | otherwise = (Nothing, False)
 
-safeReciprocal :: Double -> (Optional Double, Bool)
-safeReciprocal 0   = (Invalid, False)
-safeReciprocal num = (Valid (1/num), True)
+safeReciprocal :: Double -> (Maybe Double, Bool)
+safeReciprocal 0   = (Nothing, False)
+safeReciprocal num = (Just (1/num), True)
 
-(>=>) :: (a -> (Optional b,Bool)) -> (b -> (Optional c,Bool)) -> (a -> (Optional c,Bool))
+(>=>) :: (a -> (Maybe b,Bool)) -> (b -> (Maybe c,Bool)) -> (a -> (Maybe c,Bool))
 f1 >=> f2 = \x ->
   let fstResult = f1 x
   in case fstResult of
-    (_,False)       -> (Invalid, False)
-    (Valid value,b) -> let sndResult = f2 value 
+    (Just value,b) -> let sndResult = f2 value 
                            in (fst sndResult, b && snd sndResult)
-    (Invalid,_)     -> (Invalid, False)
+    (Nothing,_)     -> (Nothing, False)
 
-safeRootReciprocal :: Double -> (Optional Double, Bool)
+safeRootReciprocal :: Double -> (Maybe Double, Bool)
 safeRootReciprocal = safeReciprocal >=> safeRoot
 
 main :: IO ()
-main = putStrLn $ show $ safeRootReciprocal 0
+main = print $ safeRootReciprocal 6
 
--- safeRootReciprocal 4 = (Valid 0.5, True)
--- safeRootReciprocal 0 = (Invalid, False)
+-- safeRootReciprocal 4      = (Just 0.5, True)
+-- id $ safeRootReciprocal 4 = (Just 0.5, True)
+-- safeRootReciprocal 0      = (Nothing, False)
 
 
