@@ -6,8 +6,6 @@ newtype Mu f = InF { outF :: f (Mu f) }
 cata :: Functor f => Algebra f a -> Mu f -> a 
 cata f = f . fmap (cata f) . outF
 
----------------------------------------------------
-
 data StrF x = Cons Char x | Nil
 type Str = Mu StrF
 
@@ -23,10 +21,13 @@ cprint = cata phi where
     phi (Cons a b) = a : b    
     phi Nil = ""
     
-sam = InF { outF = Cons 'S'
-     (InF { outF = Cons 'a'
-     (InF { outF = Cons 'm'
-     (InF { outF = Nil })})})}
+string = InF { outF = Cons 'S'
+        (InF { outF = Cons 'T'
+        (InF { outF = Cons 'R'
+        (InF { outF = Cons 'I'
+        (InF { outF = Cons 'N'
+        (InF { outF = Cons 'G'
+        (InF { outF = Nil })})})})})})}
     
 ------------------------------------------------------
 

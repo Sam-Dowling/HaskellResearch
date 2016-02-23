@@ -1,29 +1,29 @@
 
-safeRoot :: Double -> (Maybe Double, Bool)
-safeRoot x
-  | x >= 0    = (Just (sqrt x), True)
-  | otherwise = (Nothing, False)
+data MyData = DataA | DataB | DataC | None deriving Show
 
-safeReciprocal :: Double -> (Maybe Double, Bool)
-safeReciprocal 0   = (Nothing, False)
-safeReciprocal num = (Just (1/num), True)
+type DataM = ([MyData], Bool)
 
-(>=>) :: (a -> (Maybe b,Bool)) -> (b -> (Maybe c,Bool)) -> (a -> (Maybe c,Bool))
-f1 >=> f2 = \x ->
-  let fstResult = f1 x
-  in case fstResult of
-    (Just value,b) -> let sndResult = f2 value 
-                           in (fst sndResult, b && snd sndResult)
-    (Nothing,_)     -> (Nothing, False)
+(>=>) :: ([MyData] -> DataM) -> ([MyData] -> DataM) -> ([MyData] -> DataM)
+m1 >=> m2 = \x ->
+    let (y, s1) = m1 x
+        (z, s2) = m2 y
+    in (z, s1 && s2)
+    
+result :: MyData -> [MyData] -> DataM
+result None x = (None : x, False)
+result d x = (d : x, True)
 
-safeRootReciprocal :: Double -> (Maybe Double, Bool)
-safeRootReciprocal = safeReciprocal >=> safeRoot
+functionA :: [MyData] -> DataM
+functionA x = result DataA x -- Pass!
 
-main :: IO ()
-main = print $ safeRootReciprocal 6
+functionB :: [MyData] -> DataM
+functionB x = result None x -- This function fails!
 
--- safeRootReciprocal 4      = (Just 0.5, True)
--- id $ safeRootReciprocal 4 = (Just 0.5, True)
--- safeRootReciprocal 0      = (Nothing, False)
+functionC :: [MyData] -> DataM
+functionC x = result DataC x -- Pass!
 
+pipeline = functionA >=> functionB >=> functionC
 
+run = pipeline []
+-- expecting ([None,  None, DataA], False)
+-- getting   ([DataC, None, DataA], False)
