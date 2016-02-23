@@ -1,4 +1,3 @@
-
 data MyData = DataA | DataB | DataC deriving Show
 
 type DataM = ([MyData], Bool)
@@ -15,7 +14,6 @@ passM d x = (d : x, True)
 failM :: [MyData] -> DataM
 failM x = (x, False)
 
-
 functionA :: [MyData] -> DataM
 functionA = passM DataA -- Pass!
 
@@ -25,7 +23,6 @@ functionB = failM -- This function fails!
 functionC :: [MyData] -> DataM
 functionC = passM DataC -- Pass!
 
-
 pipeline = functionA >=> functionB >=> functionC
 
-run = pipeline []
+run = pipeline [] -- ([DataC,DataA],False)
