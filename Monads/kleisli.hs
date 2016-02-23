@@ -1,5 +1,5 @@
 
-data MyData = DataA | DataB | DataC | None deriving Show
+data MyData = DataA | DataB | DataC deriving Show
 
 type DataM = ([MyData], Bool)
 
@@ -9,21 +9,23 @@ m1 >=> m2 = \x ->
         (z, s2) = m2 y
     in (z, s1 && s2)
     
-result :: MyData -> [MyData] -> DataM
-result None x = (None : x, False)
-result d x = (d : x, True)
+passM :: MyData -> [MyData] -> DataM
+passM d x = (d : x, True)
+
+failM :: [MyData] -> DataM
+failM x = (x, False)
+
 
 functionA :: [MyData] -> DataM
-functionA x = result DataA x -- Pass!
+functionA = passM DataA -- Pass!
 
 functionB :: [MyData] -> DataM
-functionB x = result None x -- This function fails!
+functionB = failM -- This function fails!
 
 functionC :: [MyData] -> DataM
-functionC x = result DataC x -- Pass!
+functionC = passM DataC -- Pass!
+
 
 pipeline = functionA >=> functionB >=> functionC
 
 run = pipeline []
--- expecting ([None,  None, DataA], False)
--- getting   ([DataC, None, DataA], False)
